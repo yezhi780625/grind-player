@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Grind Player Test</title>
+	<script type="text/javascript" src="./swfobject.min.js"></script>
+	<style>
+	html,body,#player {
+		display:flexbox;
+		background-color: lightblue;
+		height: 1080;
+		width:100%;
+	}
+	h1 {
+	    color: white;
+	    text-align: center;
+	}
+</style>
+</head>
+<body>
+<script type="text/javascript">
+		var src = "http://mscreen-hichannel.cdn.hinet.net/vod/content/ltv_drama-AllMenAreBrothers-AllMenAreBrothers_55/hd-hls-ae-pc/index.m3u8";
+		var flashvars = {
+            src: escape(src),
+            plugin_m3u8: "./OSMFHLSPlugin.swf",
+            javascriptCallbackFunction: "onJSBridge"
+        };
+        var params = {
+            allowFullScreen: true
+            , allowScriptAccess: "always"
+            , bgcolor: "#000000"
+        };
+        var attrs = {
+            name: "player"
+        };
+        swfobject.embedSWF("./GrindPlayer.swf", "player",640,480, "10.2", null, flashvars, params, attrs);
+</script>
+<h1>Grind Player</h1>
+<div id=player></div>
+</body>
+</html>
