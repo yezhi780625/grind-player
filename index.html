@@ -1,40 +1,91 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Grind Player Test</title>
-	<script type="text/javascript" src="./swfobject.min.js"></script>
+	<script type="text/javascript" src="./hls.min.js"></script>
 	<style>
-	html,body,#player {
-		display:flexbox;
-		background-color: lightblue;
-		height: 1080;
-		width:100%;
-	}
-	h1 {
-	    color: white;
-	    text-align: center;
-	}
-</style>
+		html,
+		body,
+		#player {
+			display: flexbox;
+			background-color: lightblue;
+			height: 1080;
+			width: 100%;
+		}
+
+		h1 {
+			color: white;
+			text-align: center;
+		}
+	</style>
 </head>
+
 <body>
-<script type="text/javascript">
-		var src = "http://mscreen-hichannel.cdn.hinet.net/vod/content/ltv_drama-AllMenAreBrothers-AllMenAreBrothers_55/hd-hls-ae-pc/index.m3u8";
-		var flashvars = {
-            src: escape(src),
-            plugin_m3u8: "./OSMFHLSPlugin.swf",
-            javascriptCallbackFunction: "onJSBridge"
-        };
-        var params = {
-            allowFullScreen: true
-            , allowScriptAccess: "always"
-            , bgcolor: "#000000"
-        };
-        var attrs = {
-            name: "player"
-        };
-        swfobject.embedSWF("./GrindPlayer.swf", "player",640,480, "10.2", null, flashvars, params, attrs);
-</script>
-<h1>Grind Player</h1>
-<div id=player></div>
+	<script type="text/javascript">
+		var src = 'http://mscreen-hichannel.cdn.hinet.net/vod/content/ltv_drama-AllMenAreBrothers-AllMenAreBrothers_55/hd-hls-ae-pc/index.m3u8';
+		if (video === null) {
+			video = document.getElementById('video');
+			var height = this.ReviewView.down('video-player').getHeight();
+			var width = this.ReviewView.down('video-player').getWidth();
+			video.height = height;
+			video.width = width;
+		}
+		if (hls === null) {
+			hls = new Hls({
+				// debug:true,
+				autoStartLoad: false
+			});
+			hls.on(Hls.Events.MANIFEST_PARSED, function () {
+				hls.startLevel = 1;
+				hls.startLoad();
+			});
+			hls.on(Hls.Events.ERROR, function (event, data) {
+				if (data.fatal) {
+					switch (data.type) {
+						case Hls.ErrorTypes.NETWORK_ERROR:
+							// try to recover network error
+							console.log("fatal network error encountered, try to recover");
+							hls.startLoad();
+							break;
+						case Hls.ErrorTypes.MEDIA_ERROR:
+							console.log("fatal media error encountered, try to recover");
+							// hls.recoverMediaError();
+							break;
+						default:
+							// cannot recover
+							console.log("cannot recover");
+							hls.destroy();
+							break;
+					}
+				}
+			});
+		}
+		playVideo(src);
+
+		function playVideo(src) {
+			hls.detachMedia();
+			hls.loadSource(decodeURIComponent(src));
+			hls.attachMedia(video);
+			var selector = this.ReviewView.down('combo[name=resolution]');
+			hls.on(Hls.Events.MANIFEST_LOADED, function (event, data) {
+				levels = data.levels.map(function (level, index) {
+					return {
+						text: level.height + 'p / ' + level.bitrate,
+						value: index
+					};
+				});
+				selector.setStore(Ext.create('Ext.data.Store', {
+					fields: ['text', 'value'],
+					data: levels
+				}));
+				selector.setValue(levels[hls.loadLevel].value);
+				selector.enable();
+				video.play();
+			});
+		}
+	</script>
+	<video id="video" controls></video>
 </body>
+
 </html>
