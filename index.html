@@ -22,6 +22,7 @@
 </head>
 
 <body>
+	<video id="video" controls></video>
 	<script type="text/javascript">
 		var src = 'http://mscreen-hichannel.cdn.hinet.net/vod/content/ltv_drama-AllMenAreBrothers-AllMenAreBrothers_55/hd-hls-ae-pc/index.m3u8';
 		if (video === null) {
@@ -75,17 +76,10 @@
 						value: index
 					};
 				});
-				selector.setStore(Ext.create('Ext.data.Store', {
-					fields: ['text', 'value'],
-					data: levels
-				}));
-				selector.setValue(levels[hls.loadLevel].value);
-				selector.enable();
 				video.play();
 			});
 		}
 	</script>
-	<video id="video" controls></video>
 </body>
 
 </html>
