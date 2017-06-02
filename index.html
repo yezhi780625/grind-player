@@ -61,10 +61,6 @@
 					}
 				}
 			});
-		}
-		playVideo(src);
-
-		function playVideo(src) {
 			hls.detachMedia();
 			hls.loadSource(decodeURIComponent(src));
 			hls.attachMedia(video);
@@ -79,6 +75,7 @@
 				video.play();
 			});
 		}
+			
 	</script>
 </body>
 
