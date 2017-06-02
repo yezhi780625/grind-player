@@ -27,10 +27,8 @@
 		var video,hls,src = 'http://mscreen-hichannel.cdn.hinet.net/vod/content/ltv_drama-AllMenAreBrothers-AllMenAreBrothers_55/hd-hls-ae-pc/index.m3u8';
 		if (video === null) {
 			video = document.getElementById('video');
-			var height = this.ReviewView.down('video-player').getHeight();
-			var width = this.ReviewView.down('video-player').getWidth();
-			video.height = height;
-			video.width = width;
+			video.height = 720;
+			video.width = 1280;
 		}
 		if (hls === null) {
 			hls = new Hls({
@@ -64,7 +62,6 @@
 			hls.detachMedia();
 			hls.loadSource(decodeURIComponent(src));
 			hls.attachMedia(video);
-			var selector = this.ReviewView.down('combo[name=resolution]');
 			hls.on(Hls.Events.MANIFEST_LOADED, function (event, data) {
 				levels = data.levels.map(function (level, index) {
 					return {
